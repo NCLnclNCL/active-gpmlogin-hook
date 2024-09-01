@@ -29,7 +29,25 @@ public class Main : IEntryPoint
 			File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\tokenfb2", array[0]);
 		}
 	}
+		[HarmonyPatch]
+		private class AntiCheckHookOrPatch
+		{
+			// Token: 0x06000006 RID: 6 RVA: 0x000021D4 File Offset: 0x000003D4
+			private static MethodBase TargetMethod()
+			{
+				return typeof(AppDomain).GetMethod("GetAssemblies");
+			}
 
+			// Token: 0x06000007 RID: 7 RVA: 0x000021FC File Offset: 0x000003FC
+			private static bool Prefix(ref Assembly[] __result)
+			{
+				Assembly assembly = typeof(object).Assembly;
+				Assembly[] array = new Assembly[] { assembly };
+				File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\ncl", "Ok " + assembly.FullName);
+				__result = array;
+				return false;
+			}
+		}
 	[HarmonyPatch(typeof(StringReader))]
 	[HarmonyPatch(/*Could not decode attribute arguments.*/)]
 	[HarmonyPatch(new Type[] { typeof(string) })]
