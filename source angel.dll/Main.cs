@@ -48,9 +48,9 @@ public class Main : IEntryPoint
 				return false;
 			}
 		}
-	[HarmonyPatch(typeof(StringReader))]
-	[HarmonyPatch(/*Could not decode attribute arguments.*/)]
-	[HarmonyPatch(new Type[] { typeof(string) })]
+ [HarmonyPatch(typeof(StringReader))]
+		[HarmonyPatch(MethodType.Constructor)]
+		[HarmonyPatch(new Type[] { typeof(string) })]
 	public static class StringReaderConstructorPatch
 	{
 		private static void Prefix(ref string s)
@@ -86,12 +86,12 @@ public class Main : IEntryPoint
 
 	private LocalHook _encryptHook;
 
-	public Main(IContext context, string channelName)
+	public Main(RemoteHooking.IContext context, string channelName)
 	{
 		_channelName = channelName;
 	}
 
-	public void Run(IContext context, string channelName)
+	public void Run(RemoteHooking.IContext context, string channelName)
 	{
 		//IL_0007: Unknown result type (might be due to invalid IL or missing references)
 		//IL_000d: Expected O, but got Unknown
